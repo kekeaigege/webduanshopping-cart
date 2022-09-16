@@ -25,7 +25,7 @@
               <div class="price">
                 ￥<span>{{ item.price }}</span>
               </div>
-              <ShopCount class="ev-num"></ShopCount>
+              <ShopCount class="ev-num" :goodAccount="item.count" :goodId="item.id"></ShopCount>
             </div>
           </div>
         </div>
@@ -88,7 +88,6 @@ export default {
     margin: 0px;
   }
 }
-
 .right-box {
   flex: 1;
   height: 100%;

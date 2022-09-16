@@ -10,7 +10,7 @@
   <div class="numBtn">
     <div class="cutBtn btn" @click="cutFn">-</div>
     <div class="goodCount">
-      <span>{{count}}</span>
+      <span >{{count}}</span>
     </div>
     <div class="addBtn btn" @click="addFn">+</div>
   </div>
@@ -19,17 +19,11 @@
 import bus from "../EventBus/event";
 export default {
   name: "shopCount",
-  props: {
-   goodAccount:{
-       type: Number,
-       default:{
-           account: 1
-       }
-   }
-  },
+  props: ["goodAccount","goodId"],
   data() {
     return {
-      count: this.goodAccount.account,
+      count: this.goodAccount,
+      id:this.goodId
     };
   },
   created(){
@@ -38,12 +32,12 @@ export default {
     cutFn() {
       if (this.count >= 2) {
         this.count = this.count - 1;
-        bus.emit("countChange", this.count);
+        bus.emit("countChange", {goodCount:this.count,goodId:this.id});
       }
     },
     addFn() {
       this.count = this.count + 1;
-      bus.emit("countChange", this.count);
+      bus.emit("countChange", {goodCount:this.count,goodId:this.id});
     },
   },
 };

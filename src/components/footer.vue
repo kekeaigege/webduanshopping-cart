@@ -17,21 +17,25 @@
               value="全选"
               v-model="check"
               class="inputcheck"
+              @click="allCheck"
             />
             全选
           </label>
         </li>
-        <li>
+        <li v-show="!controlDel">
           合计:
-          <span class="redcolor">￥232.00</span>
+          <span class="redcolor">￥{{ totalAmount }}</span>
         </li>
-        <li>
+        <li v-show="controlDel">
+          <button type="button" class="btn btn-warning delBtn" @click="delFn">删除</button>
+        </li>
+        <li v-show="!controlDel">
           <button
             type="button"
             class="btn btn-primary resetbtn"
-            @clink="submitPrice(totalPrice)"
+            @click="submitPrice"
           >
-            结算(<span>{{ totalPrice }}</span
+            结算(<span>{{ goodCount }}</span
             >)
           </button>
         </li>
@@ -40,18 +44,39 @@
   </div>
 </template>
 <script>
+import bus from "../EventBus/event";
 export default {
-  props: {},
+  props: ["totalAmount", "goodCount"],
   data() {
     return {
-      totalPrice: 55,
       check: false,
+      controlDel: false,
     };
   },
+  created() {
+    bus.on("changeManageBtn", (v) => {
+      this.controlDel = v;
+    });
+  },
+  emits: ["updataAlllist"],
   methods: {
-    submitPrice(totalPrice) {
-      console.log(totalPrice);
+    submitPrice() {
+      console.log(this.totalAmount);
+      if (this.totalAmount == 0 || this.totalAmount == "") {
+        alert("请选择商品");
+      } else {
+        alert("当前支付金额为" + this.totalAmount);
+      }
     },
+    //全选功能实现
+    //修改父元素中的list值
+    allCheck() {
+      console.log(this.check);
+      this.$emit("updataAlllist", this.check);
+    },
+    delFn(){
+       this.$emit("delGoodlist");
+    }
   },
 };
 </script>
@@ -81,6 +106,9 @@ export default {
       float: left;
       height: 50px;
     }
+    .delBtn {
+      width: 100px;
+    }
   }
 }
 
@@ -98,7 +126,7 @@ export default {
   font-weight: 700;
 }
 .resetbtn {
-  background: orange;
+  background: #f0ad4e;
   border: none;
   height: 35px;
   border-radius: 19px;
